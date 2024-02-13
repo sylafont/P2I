@@ -14,6 +14,7 @@ class InputNeurone(Neurone) :
         #utiliser random.random() sur le bon interval
         for i in range(self.nb_connexion):
             self.Poids_des_Connexions_avant.append(random.random())
+        print(self.Poids_des_Connexions_avant)
 
 
     def feedInput(self, valeur_pixel):

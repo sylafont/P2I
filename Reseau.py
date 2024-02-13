@@ -1,4 +1,4 @@
-from dependency import np
+from dependency import pickle
 from InputNeurone import InputNeurone
 from HiddenNeurone import HiddenNeurone
 from OutputNeurone import OutputNeurone
@@ -56,6 +56,24 @@ class Reseau :
     def Compute_Loss_Function():
         pass
 
+    def Save_Network(self):
+        try:
+            with open("network.pickle", "wb") as f:
+                pickle.dump(self, f, protocol=pickle.HIGHEST_PROTOCOL)#Warning with highest protocol peut être incompatible avec certaines version de python
+        except Exception as ex:
+            print("Error during pickling object (Possibly unsupported):", ex)
+
+    @classmethod 
+    def Load_Network(cls) :
+        try:
+            with open("network.pickle", "rb") as f:
+                return pickle.load(f)
+        except Exception as ex:
+            print("Error during unpickling object (Possibly unsupported):", ex)
+
+
 image = Get_image()
-testreseau1 = Reseau([784,17, 10])
+#testreseau1 = Reseau([784,17, 10])
+testreseau1 = Reseau.Load_Network()
 testreseau1.Compute_All_Activation(image)
+#testreseau1.Save_Network()
