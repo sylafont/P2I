@@ -1,5 +1,6 @@
 from keras.datasets import mnist
 import matplotlib.pyplot as plt
+import numpy as np
 # the data, shuffled and split between train and test sets
 #plt.figure(figsize=(7.195, 3.841), dpi=100)
 #for i in range(10):
@@ -9,6 +10,14 @@ import matplotlib.pyplot as plt
 #plt.show()
 
 def Get_image():
+  X0 = Load_Data()
+  return X0[0]
+
+def Get_proportion0():
+  X0 = Load_Data()
+  return np.mean(X0)
+
+def Load_Data():
   (X_train, y_train), (X_test, y_test) = mnist.load_data()
   X_train = X_train.reshape(60000, 784)
   X_test = X_test.reshape(10000, 784)
@@ -16,4 +25,7 @@ def Get_image():
   X_test = X_test.astype('float32')
   X_train /= 255
   X_test /= 255
-  return X_train[0]
+  return X_train
+
+print(Get_proportion0())
+

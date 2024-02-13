@@ -12,7 +12,7 @@ class Reseau :
         #self.nb_output_neurone = output_neurone
         #self.nb_input_neurone = input_neurone
         self.list_nb_neurone_par_couche = list_nb_neurone_par_couche.copy()
-
+        self.cost = 0
         self.Initialise_Network()
 
 
@@ -53,8 +53,11 @@ class Reseau :
             print(self.network[self.nb_couche-1][i].activation)
         
 
-    def Compute_Loss_Function():
-        pass
+    def Compute_Loss_Function(self, y_predicted, y_computed):
+        """Fonction à changer si on veut pouvoir calculer le cout après le passage de plusieurs image"""
+        for i, value in enumerate(y_predicted):
+            somme = somme + (value - y_computed[i])^2
+        self.cost = somme 
 
     def Save_Network(self):
         try:
