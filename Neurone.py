@@ -11,6 +11,7 @@ class Neurone:
         self.biais = random.random()#Se renseigner pour voir quel interval donner à la fonction random ici
         self.activation = 0
         self.GradientBiais = 0
+        #self.print()
 
     
     def Compute_GradientBiais(self, biais):#fonction qui doit être override pour les neurones de l'outpout layer
@@ -28,9 +29,6 @@ class Neurone:
     def Test_Dimension_NeuroneAvant_Poids():
     #Fonction qui va vérifier qu'il y a autant de poids que de neurones associées
         pass
-
-    def print(self):
-        print("Type Neurone : ", type(self), " Rang : ", self.numero_rang, " Couche : ", self.numero_couche)
 
     
 #Note : Ne pas implémenter de class weigth, ajouter une fonction de class iteration reseaux

@@ -2,22 +2,20 @@ from dependency import pickle
 from InputNeurone import InputNeurone
 from HiddenNeurone import HiddenNeurone
 from OutputNeurone import OutputNeurone
-from AccesBaseDeDonnes import Get_image
-#peut etre faire matrice np à la place de liste de neurone pour chaque couche, comme ca on a autant de couche qu'on veut
+from AccesBaseDeDonnes import Get_image_And_Label
+
 class Reseau :
     
     def __init__(self, list_nb_neurone_par_couche):
         self.nb_couche = len(list_nb_neurone_par_couche)
-        #self.nb_hidden_neurone = hidden_neurone
-        #self.nb_output_neurone = output_neurone
-        #self.nb_input_neurone = input_neurone
         self.list_nb_neurone_par_couche = list_nb_neurone_par_couche.copy()
+        self.nb_output_neurone = list_nb_neurone_par_couche[self.nb_couche -1]
         self.cost = 0
         self.Initialise_Network()
+        self.y_predicted = list(0 for i in range(0, self.nb_output_neurone))
 
 
     def Initialise_Network(self):
-        #self.network = np.empty(self.nb_couche,)
         self.network = []
 
         for i in range(self.nb_couche):
@@ -32,12 +30,7 @@ class Reseau :
                 else :
                     neurone = OutputNeurone(i,j)
                 uneCouchedeNeurone.append(neurone)
-
-            #self.network[i]= self.uneCouchedeNeurone.copy()
             self.network.append(uneCouchedeNeurone)
-        #print("Shape du réseau : ", np.shape(self.network))
-
-
 
     def Compute_All_Activation(self, pixel_image):
         for i, coucheDeNeurone in enumerate(self.network):
@@ -49,15 +42,27 @@ class Reseau :
                 for j, neurone in enumerate(coucheDeNeurone) :
                     neurone.Compute_Activation(couchePrecedente)
         print("Activation output layer :")
-        for i in range(10):
+        for i in range(10): #On affiche les activations et on les mets dans un vecteur pour y_predicted
             print(self.network[self.nb_couche-1][i].activation)
-        
+            self.y_predicted[i] = self.network[self.nb_couche-1][i].activation
 
-    def Compute_Loss_Function(self, y_predicted, y_computed):
+
+    
+    def Transform_Label_To_Vector(self, y_label):
+        y_real = list(0 for i in range(0, self.nb_output_neurone))
+        y_real[int(y_label)] = 1
+        return y_real
+        
+    
+    def Compute_Loss_Function(self, y_label):
+        y_real = self.Transform_Label_To_Vector(y_label)
         """Fonction à changer si on veut pouvoir calculer le cout après le passage de plusieurs image"""
-        for i, value in enumerate(y_predicted):
-            somme = somme + (value - y_computed[i])^2
+        somme =0
+        for i, value in enumerate(y_real):
+            somme = somme + (value - self.y_predicted[i])**2
         self.cost = somme 
+        print("Cout de la fonction : ", self.cost)
+
 
     def Save_Network(self):
         try:
@@ -75,8 +80,9 @@ class Reseau :
             print("Error during unpickling object (Possibly unsupported):", ex)
 
 
-image = Get_image()
+image, label = Get_image_And_Label(1)
 #testreseau1 = Reseau([784,17, 10])
 testreseau1 = Reseau.Load_Network()
 testreseau1.Compute_All_Activation(image)
-#testreseau1.Save_Network()
+testreseau1.Compute_Loss_Function(label)
+testreseau1.Save_Network()
